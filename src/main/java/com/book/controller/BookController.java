@@ -6,22 +6,29 @@ import com.book.resource.BookResource;
 import com.book.resource.PageResource;
 import com.book.resource.TagResource;
 import com.book.service.BookService;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class BookController {
     @Resource
@@ -30,7 +37,26 @@ public class BookController {
     //Create
     @RequestMapping(value = "/books", method = POST, produces = "application/hal+json")
     public ResponseEntity<BookResource> create(@RequestBody Book book) {
-        return ResponseEntity.ok(new BookResource(bookService.save(book)));
+            return ResponseEntity.ok(new BookResource(bookService.save(book)));
+    }
+
+    //Upload
+    @RequestMapping(value = "/upload", method = POST, produces = "application/hal+json")
+    public void create(@RequestParam("data") MultipartFile file, @RequestParam("bookId") String id) throws IOException {
+        Map <String,Object> map = new HashMap<>();
+        map.put("data",file.getBytes());
+        map.put("bookId", id);
+
+
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map <String,Object>> entity = new HttpEntity<Map <String,Object>>(map, headers);
+
+        Object res = restTemplate.exchange("http://localhost:8888", HttpMethod.POST, entity, Object.class);
+
     }
 
     //Update

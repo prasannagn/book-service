@@ -23,7 +23,7 @@ public class Book {
 
     private Status status;
 
-    private String href;
+    private String imageUrl;
 
     public int getId() {
         return id;
@@ -76,14 +76,13 @@ public class Book {
         this.status = status;
     }
 
-    public String getHref() {
-        return href;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setHref(String href) {
-        this.href = href;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
-
 
     public static void copy(Book source, Book target) {
         BeanUtils.copyProperties(source, target, "id", "tags");
@@ -102,7 +101,7 @@ public class Book {
         if (description != null ? !description.equals(book.description) : book.description != null) return false;
         if (tags != null ? !tags.equals(book.tags) : book.tags != null) return false;
         if (status != book.status) return false;
-        return href != null ? href.equals(book.href) : book.href == null;
+        return imageUrl != null ? imageUrl.equals(book.imageUrl) : book.imageUrl == null;
     }
 
     @Override

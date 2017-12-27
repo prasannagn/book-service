@@ -17,13 +17,31 @@
         <version>1.5.6.RELEASE</version>
     </parent>
 
+    <properties>
+        <logstash.logback.encoder.version>4.9</logstash.logback.encoder.version>
+        <logback-commons.version>2.0.35</logback-commons.version>
+        <java.version>1.8</java.version>
+    </properties>
+
     <dependencies>
+
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash.logback.encoder.version}</version>
+        </dependency>
 
         <!-- DAO -->
         <dependency>
@@ -42,11 +60,9 @@
             <scope>test</scope>
         </dependency>
 
+
     </dependencies>
 
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
 
 
     <build>
@@ -55,8 +71,34 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.3.4</version>
+                <configuration>
+                    <repository>fsd/${project.artifactId}</repository>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build</goal>
+
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
+
+
+
     </build>
+
+
+
 
     <repositories>
         <repository>
